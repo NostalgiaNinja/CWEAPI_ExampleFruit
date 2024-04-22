@@ -14,6 +14,9 @@ extern "C"
 	//Define models
 	ModelInfo* MDLExampleFruit;
 
+	//Define a fruit ID - This is used for making the fruit visible in the Black Market
+	int exampleFruitID;
+
 	//Define Black Market Attributes
 	BlackMarketItemAttributes BMExampleFruit = { 250, 100, 0, -1, -1, 0 };
 
@@ -29,9 +32,15 @@ extern "C"
 	//main CWE Load function -- Important stuff like adding your CWE mod goes here
 	void CWELoad(CWE_REGAPI* cwe_api)
 	{
+		//register texture lists
 		cwe_api->RegisterChaoTexlistLoad("ExampleTex", &example_texlist);
 		
-		cwe_api->RegisterChaoFruit(MDLExampleFruit->getmodel(), &example_texlist, &customFruitStats, &BMExampleFruit, customFruitFunction, "Example Fruit Name", "Example Fruit Description");
+		// 2.1.0 - Assign the Fruit ID to the fruit assignment function
+		exampleFruitID = cwe_api->RegisterChaoFruit(MDLExampleFruit->getmodel(), &example_texlist, &customFruitStats, &BMExampleFruit, customFruitFunction, "Example Fruit Name", "Example Fruit Description");
+	
+		// 2.1.0 - use General or Rare Assignment - chance must add up to 100%
+		cwe_api->RegisterBlackMarketGeneralFruit(exampleFruitID, 50);
+		//cwe_api->RegisterBlackMarketRareFruit(exampleFruitID, 50);
 	}
 
 	//initialization function - MUST exist in order to have CWE and SA2 see your mod
